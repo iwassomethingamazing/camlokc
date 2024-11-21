@@ -1,20 +1,59 @@
--- Camera Lock functions based on the table
-local camlock = getgenv()['returnal']['camlock']
+local camlockTable = getgenv()['returnal']['camlock']
+local NotificationService = game:GetService("StarterGui")
+
+-- Function to send a notification
+local function sendNotification(title, text)
+    NotificationService:SetCore("SendNotification", {
+        Title = title;
+        Text = text;
+        Duration = 3; -- Duration of the notification
+    })
+end
+
+-- Function to detect changes in the table
+local function checkForTableUpdate()
+    while true do
+        -- Check if the table has been modified
+        local newTable = getgenv()['returnal']['camlock']
+        if newTable ~= camlockTable then
+            -- Notify the user that the table was updated
+            sendNotification("Table Updated", "The camlock table has been updated. Reinjecting...")
+
+            -- Update the camlock table reference
+            camlockTable = newTable
+
+            -- Reinject the script with the new table
+            loadstring([[
+                local camlock = getgenv()['returnal']['camlock']
+                -- Your updated script here with new camlock values
+                -- (This will execute the updated camlock values after reinjecting)
+            ]])()
+
+            -- Break out of the loop after reinjecting
+            break
+        end
+        wait(1) -- Check every second for changes
+    end
+end
+
+-- Start the table update check in a separate thread
+coroutine.wrap(checkForTableUpdate)()
+
+-- Your original script logic here...
 local Camera = game.Workspace.CurrentCamera
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
-
 local LocalPlayer = Players.LocalPlayer
 local Target = nil
-local Prediction = camlock['Advance']['PredictionY']
-local Keybind = Enum.KeyCode[camlock['Key']]
+local Prediction = camlockTable['Advance']['PredictionY']
+local Keybind = Enum.KeyCode[camlockTable['Key']]
 local LockEnabled = false
-local OffsetMode = camlock['Offset']['Mode']
-local Smoothing = camlock['Adjusting']['Smoothing']
-local Adjust = camlock['Adjusting']['Adjust']
-local CheckIfJumped = camlock['Adjusting']['CheckIfJumped']
-local CustomPartsEnabled = camlock['CustomParts']['Enabled']
-local CustomParts = camlock['CustomParts']['Parts']
+local OffsetMode = camlockTable['Offset']['Mode']
+local Smoothing = camlockTable['Adjusting']['Smoothing']
+local Adjust = camlockTable['Adjusting']['Adjust']
+local CheckIfJumped = camlockTable['Adjusting']['CheckIfJumped']
+local CustomPartsEnabled = camlockTable['CustomParts']['Enabled']
+local CustomParts = camlockTable['CustomParts']['Parts']
 
 -- Function to find the closest target
 local function getClosestTarget()
