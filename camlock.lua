@@ -10,7 +10,6 @@ local Keybind = Enum.KeyCode[camlock['Key']] -- Keybind to toggle lock
 local Smoothing = camlock['Adjusting']['Smoothing'] -- Smoothing for camera movement
 local CustomPartsEnabled = camlock['CustomParts']['Enabled'] -- Check if CustomParts is enabled
 local CustomParts = camlock['CustomParts']['Parts'] -- The part to focus on (e.g., 'Head')
-local ShakeValue = camlock['ShakeValue'] -- Camera shake value
 local ClosestPart = camlock['ClosestPart'] -- Lock to closest part flag
 local AirPart = camlock['Air']['AirPart'] -- Air lock part (e.g., 'Head')
 
@@ -63,7 +62,7 @@ local function lockOnTarget()
 
             -- Smoothing the camera movement to the predicted position
             local cameraPosition = Camera.CFrame.Position
-            local newPosition = cameraPosition:Lerp(predictedPosition + Vector3.new(ShakeValue, ShakeValue, ShakeValue), Smoothing)
+            local newPosition = cameraPosition:Lerp(predictedPosition, Smoothing)
             Camera.CFrame = CFrame.new(newPosition, predictedPosition)
         end
     end
